@@ -1,0 +1,184 @@
+{% extends 'imdb/base.html' %}
+{% load static %}
+{% load imdb_specials %}
+
+
+{% block title %}{{ movie.title }} ({{ movie.year }}){% endblock %}
+
+
+{% block main %}
+<div class="row mb-1 me-0 align-items-center">
+    <div class="col-9">
+        <div class="row">
+            <div class="col-auto" style="max-width: 50%;">
+                <h2 class="mb-0">{{ movie.title }}</h2>
+                <span>{{ movie.year }} ● {% if movie.duration %}{{ movie.duration|duration_hm }}{% else %}Unknown{% endif %}</span>
+            </div>
+            <div class="col-auto">
+                <div class="row">
+                    <div class="col-12 pb-0 mb-0 text-center">
+                        <span class="h1 text-warning">{{ movie.views.count }}</span>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:-0.7rem;">
+                    <div class="col-12 pt-0 mt-0 text-center">
+                        <small class="align-top">view{{ movie.views.count|pluralize }}</small>
+                    </div>
+                </div>
+            </div>
+            {% if user.is_authenticated %}
+            <div class="col-auto pt-1">
+                <div class="col-12">
+                    {% if movie not in user.watchlist.movies %}
+                    <a class="btn btn-outline-warning pb-0 pt-1" href="{% url 'imdb:toggle-watchlist' movie.pk %}">
+                        <span class="fw-bold">+ Add to Watchlist</span>
+                        <div class="col-12 text-center">
+                            {% with users_count=movie.watchlist.count %}
+                            <small class="text-secondary">Added by {{ users_count }} user{{ users_count|pluralize:"s" }}</small>
+                            {% endwith %}
+                        </div>
+                    </a>
+                    {% else %}
+                    <a class="btn btn-outline-secondary pb-0 pt-1" href="{% url 'imdb:toggle-watchlist' movie.pk %}" style="border-color:#26cc8a!important; color:#26cc8a!important;">
+                        <span class="fw-bold">- From your watchlist</span>
+                        <div class="col-12 text-center">
+                            {% with users_count=movie.watchlist.count %}
+                            <small class="text-secondary">Also added by {{ users_count|add:"-1" }} user{{ users_count|add:"-1"|pluralize:"s" }}</small>
+                            {% endwith %}
+                        </div>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- <div class="col-1 my-0 py-0">
+        
+    </div> -->
+    <div class="col-3 text-end">
+        <div class="row h-100 align-items-center justify-content-end">
+            {% if user.is_authenticated %}
+            <div class="col-6 pe-0" style="margin-right: -2rem!important;">
+                <div class="row">
+                    <div class="col-12 pb-0 mb-0 text-center">
+                        <!-- Button trigger modal -->
+                        <a href="#" class="text-decoration-none text-light" data-bs-toggle="modal" data-bs-target="#starsModal">
+                            {% if user_rating %}
+                            <img src="{% static 'imdb/img/star-green.png' %}" class="img-fluid" style="width:25%;">
+                            <span class="h3 align-middle">{{ user_rating|default:0.0|floatformat:1 }}</span><small class="text-secondary">/10</small>
+                            {% else %}
+                            <img src="{% static 'imdb/img/star-outline-green.png' %}" class="img-fluid" style="width:25%;">
+                            <span class="h3 align-middle">Rate</span>
+                            {% endif %}
+                        </a>
+                        <!-- Modal -->
+                        <form action="{% url 'imdb:rate-movie' movie.pk %}" method="post" id="starsForm">
+                            {% csrf_token %}
+                            <div class="modal fade" id="starsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content text-dark">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-4 text-center" id="starsModalLabel">How do you like this film?</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body pt-4 pb-4">
+                                            <div class="row mb-3">  
+                                                <div class="col">
+                                                    <span class="display-1 fw-bold" id="starsDisplay">?</span><small>/10</small>
+                                                </div>
+                                            </div>
+                                            <div class="rating" id="starsChoice" style="color:#26cc8a!important;">
+                                                <input type="radio" name="rating" value="10" id="10" required><label for="10">☆</label>
+                                                <input type="radio" name="rating" value="9" id="9" required><label for="9">☆</label>
+                                                <input type="radio" name="rating" value="8" id="8" required><label for="8">☆</label>
+                                                <input type="radio" name="rating" value="7" id="7" required><label for="7">☆</label>
+                                                <input type="radio" name="rating" value="6" id="6" required><label for="6">☆</label>
+                                                <input type="radio" name="rating" value="5" id="5" required><label for="5">☆</label>
+                                                <input type="radio" name="rating" value="4" id="4" required><label for="4">☆</label>
+                                                <input type="radio" name="rating" value="3" id="3" required><label for="3">☆</label>
+                                                <input type="radio" name="rating" value="2" id="2" required><label for="2">☆</label>
+                                                <input type="radio" name="rating" value="1" id="1" required><label for="1">☆</label>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row w-100 justify-content-center">
+                                                <div class="col">
+                                                    <button type="sumbit" class="btn btn-dark w-100 fs-5" id="starsSubmit">Rate</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <script src="{% static 'imdb/js/stars.js' %}"></script>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 pt-0 mt-0 text-center">
+                        <small class="align-top">Your score</small>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="col-6 pe-0">
+                <div class="row">
+                    <div class="col-12 pb-0 mb-0 text-center">
+                        <img src="{% static 'imdb/img/star.png' %}" class="img-fluid" style="width:25%">
+                        <span class="h3 align-middle">{{ movie.rating|default:0.0|floatformat:1 }}</span><small class="text-secondary">/10</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 pt-0 mt-0 text-center">
+                        <small class="align-top">Users score</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row me-1">
+    <div class="col-3 pe-0">
+        <img src="{{ movie.pic|movie_pic_url_or_default }}" class="h-100 w-100" alt="{{ movie.title }} poster" style="object-fit:cover;">
+    </div>
+    <div class="col-9 ps-0">
+        <div class="ratio ratio-16x9">
+            <iframe src="{{ movie.trailer|or_default_video_url }}?mute=1&autoplay=1&loop=1&rel=0" title="{{ movie.title }} trailer" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+<div class="row mt-3 me-1">
+    <div class="col-6">
+        <!-- <h6 class="mb-3 text-center">Plot:</h6> -->
+        <p class="text-break"><small>{{ movie.plot | default:"Oops... No plot yet, but we'll bring it to you ASAP! :)" }}</small></p>
+        <hr class="text-secondary">
+        <p>
+            <h6>Directors:</h6>
+            {% for director in movie.directors.all %}
+            {% if not forloop.first %}{% if forloop.last %} and {% else %}, {% endif %}{% endif %}
+            <a class="text-warning" href="{% url 'imdb:director' director.slug %}">{{ director.fullname }}</a>
+            {% endfor %}
+        </p>
+    </div>
+    <div class="col-6 ps-4">
+        <!-- <h6 class="mb-3 text-center">Comments:</h6> -->
+        <input type="hidden" id="csrf_token_comments" value="{{ csrf_token }}">
+        <div id="reactCommentsRoot">
+        <script type="text/babel" src="{% static 'imdb/js/react-components/CommentSection.jsx' %}"></script>
+        <script type="text/babel">
+            const userId = "{% if user.is_authenticated %}{{ user.id }}{% endif %}"
+            const movieId = "{{ movie.id }}"
+            const defaultUserPic = "{{ None|user_pic_url_or_default }}"
+            const loginUrl = "{% url 'imdb:login-page' %}"
+            ReactDOM.render(
+                <CommentSection
+                    defaultUserPic={defaultUserPic}
+                    loginUrl={loginUrl}
+                />, 
+                document.getElementById('reactCommentsRoot')
+            )
+        </script>
+    </div>
+</div>
+{% endblock %}

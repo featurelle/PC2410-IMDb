@@ -1,0 +1,28 @@
+{% load static %}
+{% load imdb_specials %}
+
+<div class="col-1 text-end">
+    {% if page_obj.previous_page_number != 1 %}
+    <a href="?page=1" class="text-decoration-none text-warning">&laquo; first</a>
+    {% endif %}
+</div>
+<div class="col-1 text-start">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="text-decoration-none text-warning">previous</a>
+    {% endif %}
+</div>
+<div class="col-2 text-center">
+    <span class="h6">
+        {{ page_obj }}
+    </span>
+</div>
+<div class="col-1 text-end">
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="text-decoration-none text-warning">next</a>
+    {% endif %}
+</div>
+<div class="col-1 text-start">
+    {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
+    <a href="?page={{ page_obj.paginator.num_pages }}" class="text-decoration-none text-warning">last &raquo;</a>
+    {% endif %}
+</div>

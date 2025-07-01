@@ -1,0 +1,42 @@
+{% load static %}
+{% load imdb_specials %}
+
+<div class="card bg-dark h-100">
+    {% if user.is_authenticated %}
+    <div class="col-12" style="position:absolute; margin-top: 125%;">
+        {% if movie not in user.watchlist.movies %}
+        <a href="{% url 'imdb:toggle-watchlist' movie.pk %}" class="btn btn-warning h5" style="border-radius: 0 !important;">
+            + Remember
+        </a>
+        {% else %}
+        <a href="{% url 'imdb:toggle-watchlist' movie.pk %}" class="btn btn-dark h5" style="border-radius: 0 !important; border-color:#26cc8a!important; color: #26cc8a!important;">
+            - Watchlisted
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+    <a href="{% url 'imdb:movie' movie.slug %}" class="text-decoration-none text-light">
+        <img src="{{ movie.pic|movie_pic_url_or_default }}" class="card-img-top" alt="{{ movie.title }} poster">
+        <div class="card-body pb-1">
+            <h5 class="card-title">{{ movie.title }} ({{ movie.year }})</h5>
+        </div>
+    </a>
+    <div class="card-body d-flex flex-column py-0 pb-2">
+        <div class="row mt-auto">
+            <div class="col-7 text-start">
+                {% if movie.trailer %}
+                <a href="{{ movie.trailer }}" class="card-link text-decoration-none text-secondary">
+                    Trailer
+                    <img src="{% static 'imdb/img/camera.png' %}" class="img-fluid w-25">
+                </a>
+                {% else %}
+                <span class="card-text text-secondary">No video</span>
+                {% endif %}
+            </div>
+            <div class="col-5 text-end text-warning">
+                {{ movie.rating|default:0.0|floatformat:1 }}
+                <img src="{% static 'imdb/img/star.png' %}" class="img-fluid w-25">       
+            </div> 
+        </div>
+    </div> 
+</div>

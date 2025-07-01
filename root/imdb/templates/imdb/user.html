@@ -1,0 +1,91 @@
+{% load static %}
+{% load imdb_specials %}
+
+
+{% if user.is_authenticated %}
+<div class="row justify-content-end align-items-center">
+    <div class="col-auto text-end">
+        <div class="row">
+            <div class="col">
+                <div class="dropdown">
+                    <a class="text-warning dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ user.username }}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'imdb:profile' %}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'imdb:watchlist' %}">Watchlist</a></li>
+                        <li><a class="dropdown-item" href="{% url 'imdb:movies-viewed' %}">History</a></li>
+                        <li><a class="dropdown-item" href="{% url 'imdb:logout' %}">Log out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-auto">
+        <img src="{{ user | user_pic_url_or_default }}" alt="userpic" class="img-fluid rounded" style="height: 2.3rem; width: 2.3rem; object-fit:cover;">
+    </div>
+</div>
+{% else %}
+<div class="row justify-content-end">
+    <div class="col pe-2">
+        <div class="dropdown">
+            <a class="text-warning dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Login
+            </a>
+            <span class="mx-1"> or </span>
+            <a href="{% url 'imdb:login-page' %}#register" class="text-light fw-bold text-decoration-none">
+                Register
+            </a>
+            <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+            <div class="dropdown-menu p-4">
+                <div id="reactRoot"></div>
+                <script type="text/babel" src="{% static 'imdb/js/react-components/LoginMinifiedForm.jsx' %}"></script>
+                <script type="text/babel">
+                    ReactDOM.render(
+                        <LoginMinifiedForm />, 
+                        document.getElementById('reactRoot')
+                    )
+                </script>
+            </div>
+            <!-- <form method="POST" class="dropdown-menu dropdown-menu-end p-4" id="loginForm">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="usernameInput" class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username" id="usernameInput" placeholder="User login" required>
+                </div>
+                <div class="mb-3">
+                    <label for="userPasswordInput" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" id="userPasswordInput" placeholder="User password" required>
+                </div>
+                <span id="loginMessage"></span>
+                <!-- <span class="text-dander">Incorrect username or password</span> -->
+                <!-- <button type="submit" class="btn btn-warning" id="loginSubmit">Sign in</button>
+            </form>
+            <script src="{% static 'imdb/js/post.js' %}"></script>
+            <script>
+                (() => {
+                    const form = document.querySelector('#loginForm')
+                    const messageBox = document.querySelector('#loginMessage')
+                    const submitBtn = document.querySelector('#loginSubmit')
+
+                    submitBtn.addEventListener('click', async e => {
+                        e.preventDefault()
+                        e.stopPropagation()
+
+                        const response = await tryPostForm(form, '{% url "imdb:login-api" %}')
+                        if (response.status === 200)  {
+                            messageBox.classList.remove('text-danger')
+                            messageBox.textContent = 'Loading your profile! :)'
+                            location.reload()
+                        }
+                        else {
+                            messageBox.classList.add('text-danger')
+                            messageBox.textContent = 'Wrong username or password! :('
+                        }
+                    })
+                })()
+            </script> -->
+        </div>
+    </div>
+</div>
+{% endif %}

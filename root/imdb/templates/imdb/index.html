@@ -1,0 +1,52 @@
+{% extends 'imdb/base.html' %}
+{% load static %}
+{% load imdb_specials %}
+
+
+{% block title %}Welcome{% endblock %}
+
+
+{% block main %}
+<div class="row">
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <a href="{% url 'imdb:movies' %}" class="h4 text-decoration-none text-warning">Watch now:</a>
+                <div class="row gap-5 px-2 py-2">
+                    {% for movie in movies %}
+                    <div class="col-2">
+                        {% include 'imdb/movies/card.html' %}
+                    </div>
+                    {% endfor %}   
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+                <a href="{% url 'imdb:directors' %}" class="h4 text-decoration-none text-warning">Known people:</a>
+                <div class="row gap-5 px-2 py-2 text-center">
+                    {% for director in directors %}
+                    <div class="col-2">
+                        {% include 'imdb/directors/card.html' %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% if watchlist %}
+        <div class="row mt-4">
+            <div class="col">
+                <a href="{% url 'imdb:watchlist' %}" class="h4 text-decoration-none text-warning">Your watchlist:</a>
+                <div class="row gap-5 px-2 py-2">
+                    {% for movie in watchlist %}
+                    <div class="col-2">
+                        {% include 'imdb/movies/card.html' %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'imdb/base.html' %}
+{% load static %}
+{% load imdb_specials %}
+
+
+{% block title %}{{ director.fullname }}{% endblock %}
+
+
+{% block main %}
+<div class="row mb-3 me-1">
+    <div class="col-10">
+        <h4 class="mb-0">{{ director.fullname }}</h4>
+        {% with start=director.creative_period.start end=director.creative_period.end %}
+        <span>{% if start %}{{ start }}{% if start != end %} - {{ end }}{% endif %}{% endif %}</span>
+        {% endwith %}
+    </div>
+    <div class="col-2 text-end">
+        <div class="row h-100 align-items-center me-0">
+            <div class="col">
+                <span class="h3 align-middle text-warning">{{ director.rating|default:0.0|floatformat:1 }}</span>
+                <img src="{% static 'imdb/img/star.png' %}" class="img-fluid" style="width: 10%;">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row me-1">
+    <div class="col-3 pe-0">
+        <img src="{{ director.pic|director_pic_url_or_default }}" class="h-100 w-100" alt="{{ director.fullname }} image" style="object-fit:cover;">
+    </div>
+    <div class="col-9 ps-0">
+        <div class="ratio ratio-16x9">
+            <iframe src="{{ director.best_trailer|or_default_video_url }}?mute=1&autoplay=1&loop=1" title="{{ director.fullname }}'s best movie" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-4">
+        <!-- <h5>Directed:</h5> -->
+        {% for movie in director.movies.all %}
+        <div class="row mb-1" style="height:13vh;">
+            <div class="col-2 h-100 pe-0">
+                <img src="{{ movie.pic|movie_pic_url_or_default }}" class="img-fluid w-100 h-100" style="object-fit:cover;">
+            </div>
+            <div class="col-8">
+                <div class="row align-items-center ps-3 h-100">
+                    <div class="col">
+                        <a class="text-decoration-none text-light" href="{% url 'imdb:movie' movie.slug %}">{{ movie.title }}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="row align-items-center h-100">
+                    <div class="col text-center text-secondary">
+                        {{ movie.year }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

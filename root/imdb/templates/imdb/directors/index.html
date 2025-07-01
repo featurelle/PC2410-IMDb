@@ -1,0 +1,33 @@
+{% extends 'imdb/base.html' %}
+{% load static %}
+{% load imdb_specials %}
+
+
+{% block title %}Directors{% endblock %}
+
+
+{% block main %}
+<div class="row">
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <span class="h4">
+                    All directors
+                </span>
+                <div class="row gap-5 px-2 py-2 text-center">
+                    {% for director in directors %}
+                    <div class="col-2">
+                        {% include 'imdb/directors/card.html' %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if page_obj.paginator.num_pages > 1 %}
+                <div class="row mt-4 justify-content-center">
+                    {% include 'imdb/pagination.html' %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

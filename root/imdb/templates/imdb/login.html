@@ -1,0 +1,124 @@
+{% extends 'imdb/base.html' %}
+{% load static %}
+{% load imdb_specials %}
+
+
+{% block title %}Login Page{% endblock %}
+
+{% block header %}
+<div class="row align-items-center justify-content-center">
+    <div class="col-auto text-end">
+        <h1>Welcome to</h1>
+    </div>
+    <div class="col-auto text-start p-0">
+        <a href="{% url 'imdb:index' %}" class="text-warning text-decoration-none">
+            <img src="{% static 'imdb/img/seecorn-short.png' %}" alt="seecorn" class="img-fluid" style="max-height: 3.5rem;">
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block main %}
+<div class="row justify-content-center my-5">
+    <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+    <div class="col-4" id="reactRoot">
+        <script type="text/babel" src="{% static 'imdb/js/react-components/LoginRegisterForm.jsx' %}"></script>
+        <script type="text/babel">
+            const backref = "{{ redirect_to|escapejs }}";
+            ReactDOM.render(<LoginRegisterForm backref={backref}/>, document.getElementById('reactRoot'))
+        </script>
+        <!-- <ul class="nav nav-tabs" id="tabs">
+            <li class="nav-item w-50 text-center">
+                <a class="nav-link active" data-bs-toggle="tab" href="#loginTab">Login</a>
+            </li>
+            <li class="nav-item w-50 text-center">
+                <a class="nav-link" data-bs-toggle="tab" href="#registerTab">Register</a>
+            </li>
+        </ul>
+        
+        <div class="tab-content">
+            <div class="tab-pane container active" id="loginTab">
+                <form method="POST" id="loginForm" class="p-4 pb-5 text-dark text-center">
+                    {% csrf_token %}
+                    <div class="mb-3 text-start">
+                        <label for="usernameLoginInput" class="form-label h6">Username</label>
+                        <input type="text" class="form-control" name="username" id="usernameLoginInput" placeholder="User login" required>
+                    </div>
+                    <div class="mb-3 text-start">
+                        <label for="userPasswordLoginInput" class="form-label h6">Password</label>
+                        <input type="password" class="form-control" name="password" id="userPasswordLoginInput" placeholder="User password" required>
+                    </div>
+                    <div class="my-2">
+                        <span id="loginMessage"></span>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-75" id="loginSubmit">Sign in</button>
+                </form>
+            </div>
+            <div class="tab-pane container" id="registerTab">
+                <form method="POST" id="registerForm" class="p-4 pb-5 text-dark text-center">
+                    {% csrf_token %}
+                    <div class="mb-3 text-start">
+                        <label for="usernameRegisterInput" class="form-label h6">Username</label>
+                        <input type="text" class="form-control" name="username" id="usernameRegisterInput" placeholder="User login" required>
+                    </div>
+                    <div class="mb-3 text-start">
+                        <label for="userPasswordRegisterInput" class="form-label h6">Password</label>
+                        <input type="password" class="form-control" name="password" id="userPasswordRegisterInput" placeholder="User password" required>
+                    </div>
+                    <div class="my-2">
+                        <span id="registerMessage"></span>
+                    </div>
+                    <button type="submit" class="btn btn-warning w-75" id="registerSubmit">Register</button>
+                </form>
+            </div>
+        </div>
+        <script src="{% static 'imdb/js/post.js' %}"></script>
+        <script>
+            (() => {
+                // Login form
+                const loginForm = document.querySelector('#loginForm')
+                const loginMessageBox = document.querySelector('#loginMessage')
+                const loginSubmitBtn = document.querySelector('#loginSubmit')
+
+
+                loginSubmitBtn.addEventListener('click', async e => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    
+                    const response = await tryPostForm(loginForm, '{% url "imdb:login-api" %}')
+                    if (response.status === 200)  {
+                        loginMessageBox.classList.remove('text-danger')
+                        loginMessageBox.textContent = 'Loading your profile! :)'
+                        location.href = '{% if redirect_to %}{{ redirect_to }}{% else %}{% url "imdb:index" %}{% endif %}'
+                    }
+                    else {
+                        loginMessageBox.classList.add('text-danger')
+                        loginMessageBox.textContent = 'Wrong username or password! :('
+                    }
+                })
+
+                const registerForm = document.querySelector('#registerForm')
+                const registerMessageBox = document.querySelector('#registerMessage')
+                const registerSubmitBtn = document.querySelector('#registerSubmit')
+
+                // Register form
+                registerSubmitBtn.addEventListener('click', async e => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    
+                    const response = await tryPostForm(registerForm, '{% url "imdb:register-api" %}')
+                    if (response.status === 201)  {
+                        registerMessageBox.classList.remove('text-danger')
+                        registerMessageBox.textContent = `Whoa! Regstered! Loading your page! :)`
+                        location.href = '{% if redirect_to %}{{ redirect_to }}{% else %}{% url "imdb:index" %}{% endif %}'
+                    }
+                    else {
+                        registerMessageBox.classList.add('text-danger')
+                        registerMessageBox.textContent = 'User with this username already exists :('
+                    }
+                })
+            })()
+        </script> -->
+    </div>
+</div>
+{% endblock %}

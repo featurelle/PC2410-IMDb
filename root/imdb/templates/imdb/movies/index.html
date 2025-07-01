@@ -1,0 +1,35 @@
+{% extends 'imdb/base.html' %}
+{% load static %}
+{% load imdb_specials %}
+
+
+{% block title %}Movies{% endblock %}
+
+
+{% block main %}
+<div class="row">
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <span class="h4">
+                    {% block top-text %}All movies{% endblock %}
+                </span>
+                <div class="row gap-5 px-2 py-2">
+                    {% for movie in movies %}
+                    <div class="col-2">
+                        {% include 'imdb/movies/card.html' %}
+                    </div>
+                    {% empty %}
+                    {% block empty %}{% endblock %}
+                    {% endfor %}   
+                </div>
+                {% if page_obj.paginator.num_pages > 1 %}
+                <div class="row mt-4 justify-content-center">
+                    {% include 'imdb/pagination.html' %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

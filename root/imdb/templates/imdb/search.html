@@ -1,0 +1,56 @@
+{% extends 'imdb/base.html' %}
+{% load static %}
+{% load imdb_specials %}
+
+
+{% block title %}Search for "{{ search_results.query }}"{% endblock %}
+
+
+{% block main %}
+<div class="row">
+    <div class="col">
+    {% if search_results.movies or search_results.directors %}
+        {% if search_results.search_type == "movies" or search_results.search_type == "all" %}
+        <div class="row">
+            <div class="col">
+                <span class="h4">
+                    Found movies
+                </span> ({{ search_results.movies|length }})
+                <div class="row gap-5 px-2 py-2">
+                    {% for movie in search_results.movies %}
+                    <div class="col-2">
+                        {% include 'imdb/movies/card.html' %}
+                    </div>
+                    {% empty %}
+                    <span class="h5">No movies were found.</span>
+                    {% endfor %}   
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if search_results.search_type == "directors" or search_results.search_type == "all" %}
+        <div class="row {% if search_results.search_type == 'all' %}mt-4{% endif %}">
+            <div class="col">
+                <span class="h4">
+                    Found directors
+                </span> ({{ search_results.directors|length }})
+                <div class="row gap-5 px-2 py-2 text-center">
+                    {% for director in search_results.directors %}
+                    <div class="col-2">
+                        {% include 'imdb/directors/card.html' %}
+                    </div>
+                    {% empty %}
+                    <span class="h5 text-start">No directors were found.</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    {% else %}
+    <span class="h5">Search for "{{ search_results.query }}" gave no results.</span>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'imdb/movies/index.html' %}
+
+{% block title %}Your views{% endblock %}
+
+{% block top-text %}Visited movies{% endblock %}
+
+{% block empty %}
+<h3 class="mt-4">
+    No movies visited... <a href="{% url 'imdb:movies' %}" class="text-decoration-none text-warning">Try watching some!</a> There're awesome! :)
+</h3>
+{% endblock %}

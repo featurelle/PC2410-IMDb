@@ -1,0 +1,37 @@
+:root {
+    --warning: #ffc107;
+    --dark: #212529;
+    --light: #f8f9fa;
+    --secondary: #6c757d;
+}
+
+/* .tab-pane {
+    border-top-right-radius: 0!important;
+    border-top-left-radius: 0!important;
+} */
+
+.nav-tabs .nav-item .nav-link {
+    color: var(--light);
+}
+
+.nav-tabs .nav-item:first-child .nav-link {
+    border-top-right-radius: 0;
+}
+
+.nav-tabs .nav-item:last-child .nav-link {
+    border-top-left-radius: 0;
+}
+
+.nav-tabs .nav-item .nav-link.active {
+    color: var(--dark);
+    font-weight: bolder;
+}
+
+.tab-content {
+    border-top: transparent;
+}
+  
+.tab-content .tab-pane {
+    background-color: var(--light);
+    color: var(--dark);
+}

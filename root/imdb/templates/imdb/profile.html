@@ -1,0 +1,124 @@
+{% extends 'imdb/base.html' %}
+{% load static %}
+{% load imdb_specials %}
+
+
+{% block title %}Profile{% endblock %}
+
+
+{% block main %}
+<div class="row mt-4 me-1 justify-content-center">
+    <div class="col-8">
+        <h4>Profile settings</h4>
+        <form action="{% url 'imdb:profile' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if form.errors %}
+            <ul class="errorlist text-danger">
+                {% for field in form %}
+                    {% if field.errors %}
+                        <li><b>{{ field.label }}</b>:
+                            {% for error in field.errors %}
+                                {{ error|escape }}
+                            {% endfor %}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                {% if form.non_field_errors %}
+                    <li>
+                        {% for error in form.non_field_errors %}
+                            {{ error|escape }}
+                        {% endfor %}
+                    </li>
+                {% endif %}
+            </ul>
+            {% endif %}
+            <div>
+                <a class="btn btn-outline-light rounded-0 w-100 text-start" data-bs-toggle="collapse" href="#collapseSettingsUsername" role="button" aria-expanded="false" aria-controls="collapseSettingsUsername">
+                    <span>+</span>
+                    <span class="ps-5">Username</span>
+                </a>
+                <div class="collapse" id="collapseSettingsUsername" style="background-color: rgba(0, 0, 0, 0.2); box-sizing: content-box;">
+                    <div class="row px-5 pt-3 pb-5 align-items-center">
+                        <div class="col-4 ps-5 border-end border-secondary">
+                            <span class="fw-bold">{{ user.username }}</span>
+                        </div>
+                        <div class="col-8 pe-5">
+                            <div class="input-group w-75">
+                                <span class="input-group-text bg-dark text-secondary" id="inputSettingsUsernameLabel"><small>Type new:</small></span>
+                                <input type="text" class="form-control" name="username" aria-label="Settings Username input" aria-describedby="inputSettingsUsernameLabel">
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            <div>
+                <a class="btn btn-outline-light rounded-0 w-100 text-start" data-bs-toggle="collapse" href="#collapseSettingsEmail" role="button" aria-expanded="false" aria-controls="collapseSettingsEmail">
+                    <span>+</span>
+                    <span class="ps-5">Email</span>
+                </a>
+                <div class="collapse" id="collapseSettingsEmail" style="background-color: rgba(0, 0, 0, 0.2); box-sizing: content-box;">
+                    <div class="row px-5 pt-3 pb-5 align-items-center">
+                        <div class="col-4 ps-5 border-end border-secondary">
+                            <span class="fw-bold {% if not user.email %}text-secondary{% endif %}">{{ user.email | default:"Set up first"}}</span>
+                        </div>
+                        <div class="col-8 pe-5">
+                            <div class="input-group w-75">
+                                <span class="input-group-text bg-dark text-secondary" id="inputSettingsEmailLabel"><small>Type new:</small></span>
+                                <input type="email" class="form-control" name="email" aria-describedby="inputSettingsEmailLabel">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <a class="btn btn-outline-light rounded-0 w-100 text-start" data-bs-toggle="collapse" href="#collapseSettingsPassword" role="button" aria-expanded="false" aria-controls="collapseSettingsPassword">
+                    <span>+</span>
+                    <span class="ps-5">Password</span>
+                </a>
+                <div class="collapse" id="collapseSettingsPassword" style="background-color: rgba(0, 0, 0, 0.2); box-sizing: content-box;">
+                    <div class="row px-5 pt-3 pb-5 align-items-center">
+                        <div class="col-4 ps-5 border-end border-secondary">
+                            <span class="fw-bold text-secondary">Hidden</span>
+                        </div>
+                        <div class="col-8 pe-5">
+                            <div class="input-group w-75">
+                                <span class="input-group-text bg-dark text-secondary w-25" id="inputSettingsPasswordOldLabel"><small>Type old:</small></span>
+                                <input type="password" class="form-control" name="old_password" aria-describedby="inputSettingsPasswordOldLabel"> 
+                            </div>
+                            <div class="input-group w-75 mt-2">
+                                <span class="input-group-text bg-dark text-secondary w-25" id="inputSettingsPasswordNewLabel"><small>Type new:</small></span>
+                                <input type="password" class="form-control" name="new_password1" aria-describedby="inputSettingsPasswordNewLabel">
+                            </div>
+                            <div class="input-group w-75 mt-2">
+                                <span class="input-group-text bg-dark text-secondary w-25" id="inputSettingsPasswordCheckLabel"><small>Repeat:</small></span>
+                                <input type="password" class="form-control" name="new_password2" aria-describedby="inputSettingsPasswordCheckLabel">
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            <div>
+                <a class="btn btn-outline-light rounded-0 w-100 text-start" data-bs-toggle="collapse" href="#collapseSettingsUserpic" role="button" aria-expanded="false" aria-controls="collapseSettingsUserpic">
+                    <span>+</span>
+                    <span class="ps-5">Avatar</span>
+                </a>
+                <div class="collapse" id="collapseSettingsUserpic" style="background-color: rgba(0, 0, 0, 0.2); box-sizing: content-box;">
+                    <div class="row px-5 pt-3 pb-5 align-items-center">
+                        <div class="col-4 ps-2 pe-4 border-end border-secondary">
+                            <img src="{{ user | user_pic_url_or_default }}" alt="Your profile picture" class="border border-3 rounded" style="height: 10rem; width: 10rem; object-fit:cover;">
+                        </div>
+                        <div class="col-8 pe-5">
+                            <div class="input-group w-75">
+                                <input type="file" class="form-control" name="pic" id="inputSettingsUserpic" accept="image/*">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-light rounded-0">Save changes</button>
+            </div> 
+        </form>
+    </div>
+</div>
+{% endblock %}

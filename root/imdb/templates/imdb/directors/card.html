@@ -1,0 +1,23 @@
+{% load static %}
+{% load imdb_specials %}
+
+<div class="div align-content-center">
+    <a href="{% url 'imdb:director' director.slug %}" class="text-decoration-none text-warning">
+        <div class="row">
+            <div class="col" style="height: 190px; width: 150px;">
+                <img src="{{ director.pic|director_pic_url_or_default }}" alt="{{ director.fullname }} photo" class="rounded-circle h-100 w-100" style="object-fit:cover;">
+            </div>
+        </div>
+        <div class="row justify-content-center p-0 m-0 text-warning">
+            <div class="col-6">
+                {{ director.rating|default:0.0|floatformat:1 }}
+                <img src="{% static 'imdb/img/star.png' %}" class="img-fluid w-25"> 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h5 class="text-light">{{ director.fullname }}</h5>
+            </div>
+        </div>
+    </a>
+</div>
