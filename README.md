@@ -1,3 +1,3 @@
 Seecorn (IMDb-clone)
 -
-A website featuring movie/director listings, search, favourites, ratings, comments, media, login, settings, etc., static pages with cached data and embedded Ajax/React elements.
+A website featuring movie/director listings, search, favourites, ratings, comments, media, login/auth, guest session, views counters, settings, etc., static pages with cached data and embedded Ajax/React elements.
