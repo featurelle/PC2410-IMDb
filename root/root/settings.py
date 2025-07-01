@@ -37,10 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'imdb',
     'rest_framework',
-    'django_rq',
-    'scheduler'
+    'imdb',
 ]
 
 MIDDLEWARE = [
@@ -141,23 +139,3 @@ MEDIA_URL = 'media/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# DjangoRQ
-
-RQ_QUEUES = {
-    'default': {
-        'HOST': 'localhost',
-        'PORT': 6379,
-        'DB': 0,
-        'DEFAULT_TIMEOUT': 360,
-    },
-}
-
-RQ_SHOW_ADMIN_LINK = True
-
-RQ_SCHEDULE = {
-    'cleanup_media': {
-        'func': 'imdb.tasks.cleanup_media_job',
-        'schedule': timedelta(days=1),
-    },
-}
